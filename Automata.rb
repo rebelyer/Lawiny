@@ -67,7 +67,7 @@ class App
 
     @t = glGenTextures(2)
 
-    @@automata = Avalanche.new(size, threshold)
+    @automata = Avalanche.new(size, threshold)
 
     # default checkerboard texture
     glBindTexture(GL_TEXTURE_2D,@t[0])
@@ -161,7 +161,7 @@ class App
     when ?\e # ESCAPE
       exit(0)
     when ?s # SNOWING
-      @@automata.snowing!
+      @automata.snowing!
     end
     glutPostRedisplay()
   end
@@ -170,22 +170,21 @@ end
 class Avalanche
   
   def initialize (size, threshold, conservative = true)
-    @@threshold = threshold
-    @@size = size
-    @@conservative = conservative
-    @height = Array.new @@size
-    @height.each do |ar| 
-      ar = Array.new @@size
-      ar.each {|cel| cel = 0}
+    @threshold = threshold
+    @size = size
+    @conservative = conservative
+    @height = Array.new @size
+    @height.map! do |ar| 
+      ar = Array.new @size
+      ar.map! {0}
     end
 
   end
 
   def snowing!
-   # @point = 2.times.map{ rand(@@size) }
-    @@point = [3,2]
-    if @@conservative then
-      @height[@@point[0]][@@point[1]] += 1
+    @point = 2.times.map{ rand(@size) }
+    if @conservative then
+      @height[@point[0]][@point[1]] += 1
     else
       (0...@point[0]).each do |t|
         if rand(2) then
@@ -197,6 +196,18 @@ class Avalanche
     end
   end
 
+  def compute_slope
+    @slope = Array.new(@size-1)
+    @slope.map! {Array.new(@size-1)}
+
+    (@size-1).times do |i|
+      (@size-1).times do |j|
+        @slope[i][j] = @height[i][j] + @height[i-1][j+1] - @height[i][j+1] - @height[i][j+2] if i > 0 
+        @slope[i][j] = 2*@height[i][j] - @height[i][j+1] - @height[i][j+2] if i == 0
+
+      end
+    end
+  end
 
 
 end
