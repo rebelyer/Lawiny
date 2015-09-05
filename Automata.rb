@@ -165,6 +165,19 @@ class App
     end
     glutPostRedisplay()
   end
+  
+  def s (n)
+		n.times { @@automata.snowing! }
+	end
+	
+	def show
+		@@automata.height.map{|ar| ar * ' '}*"\n"
+	end 
+
+	def start
+		@@automata.compute_slope
+		@@automata.fall
+	end
 end
 
 class Avalanche
@@ -178,7 +191,10 @@ class Avalanche
       ar = Array.new @size
       ar.map! {0}
     end
-
+  end
+  
+  def height
+  	@height
   end
 
   def snowing!
@@ -197,19 +213,35 @@ class Avalanche
   end
 
   def compute_slope
-    @slope = Array.new(@size-1)
+    @slope = Array.new(@size)
     @slope.map! {Array.new(@size-1)}
 
     (@size-1).times do |i|
       (@size-1).times do |j|
-        @slope[i][j] = @height[i][j] + @height[i-1][j+1] - @height[i][j+1] - @height[i][j+2] if i > 0 
-        @slope[i][j] = 2*@height[i][j] - @height[i][j+1] - @height[i][j+2] if i == 0
-
+      	if j.even? then
+      		bott = j == @size - 2 || j == @size - 1 # like bottom
+      		if i > 0 then
+	        	@slope[i][j] = @height[i][j]+ @height[i-1][j+1]- @height[i][j+1]- @height[i][j+2] unless bott
+	        	@slope[i][j] = @height[i][j] + @height[i-1][j+1] - @height[i][j+1] if bott
+  	      else
+		        @slope[0][j] = 2*@height[0][j] - @height[0][j+1] - @height[0][j+2] unless bott
+		        @slope[0][j] = 2*@height[i][j] - @height[i][j+1] if bott
+		      end
+		    else
+		    	if i < @size - 1 then
+		    		@slope[i][j] = @height[i][j]+ @height[i][j+1]- @height[i+1][j+1]- @height[i][j+2] unless bott
+		    		@slope[i][j] = @height[i][j] if bott # open bundlary
+		    	else
+		    		@slope[i][j] = @height[i][j] + @height[i][j+1] - @height[i][j+2] unless bott # open bundlary
+		    		@slope[i][j] = @height[i][j] if bott # open bundlary
+		    	end
+	      end
       end
     end
   end
-
-
+  
+  def fall
+  end
 end
 
 
