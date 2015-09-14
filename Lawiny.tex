@@ -1,0 +1,73 @@
+\documentclass{article} 
+
+\usepackage{polski}              
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{amsmath}
+
+\author{Rafał Wiensko \\Wojciech Zygmuntowicz}
+\title{Sprawozdanie na temat lawin}
+\begin{document}
+\maketitle
+
+\newpage
+ 
+\section{Wstęp}
+	\subsection{Cel projektu}
+
+		Celem projektu było zbadanie praw zachodzących przy rozchodzeniu się lawin śnieżnych, jednak prawdą jest, że te same zasady obowiązują także przy rozchodzeniu się piasku na kopczykach, 
+		pożarów w lasach, epidemii chorób w miastach, a także wielu innych niezwiązanych z samymi lawinami przypadkach.  W tym sprawozdaniu opisano w jaki sposób zbadano zachowanie się lawin
+		oraz przedstawiono wyniki i porównano je z oczekiwanym rezultatem.
+
+	\subsection{Model teoretyczny}
+
+		W celu symulacji spadania lawiny skorzystano z tzw. automatu komórkowego, tj. podzielono powierzchnię góry na $n^{2}$ powierzchni $P_{i j}$. Każda powierzchnia posiada pewną średnią 
+		wysokość $h_{i j}$. Następnym krokiem jest obliczenie lokalnego spadku $S_{i j}$, wg następującej zasady: 
+			
+
+			\[ S_{i j} = h_1 + h_2 - h_3 - h_4 \]
+			
+			
+			\begin{figure}[h]
+				\begin{center}
+					\includegraphics [bb = 0 0 340 318, scale=0.5] {Slope_ij.png}
+				\end{center}
+			\end{figure}
+		
+		Dla każdej automaty definiujemy lokalny spadek progowy, powyżej którego pozwalamy, aby przemieścił się śnieg. Jeżeli zostanie on przekroczony następuje lokalne zsunięcie się śniegu, czyli:
+		
+			\[ h_1 \rightarrow h_1 - 1 \]
+			\[ h_2 \rightarrow h_2 - 1 \]
+			\[ h_3 \rightarrow h_3 + 1 \]						
+			\[ h_4 \rightarrow h_4 + 1 \]
+			
+		Dodatkowo potrzebujemy mechanizmu, który sprawi że będzie się pojawiał nowy śnieg, definiujemy dwa mechanizmy sypania śniegu: zachowawczy i niezachowawczy. Sypanie zachowawcze polega
+		na zwiększaniu wysokości losowo wybranej powierzchni $h_{i j}$ o jednostkę. Z drugiej strony mechanizm niezachowawczy polega na zwiększaniu losowo wybranego lokalnego spadku $S_{i j}$, 
+		czyli na zwiększeniu wysokości całego rzędu, lub kolumny od losowo wybranej współrzędnej do górnego krańca powierzchni o jednostkę.
+		\newline
+
+		Potrzeba także zdefiniować zachowanie się automaty na jej krawędziach, z tego też powodu wprowadza się tzw. otwarte i zamknięte warunki brzegowe. Otwarte warunki brzegowe pozwalają na 
+		wysypywanie się śniegu poza obszar automaty, zamknięte sprawiają, że śnieg nie może się z niego wydostać. 
+						
+	\subsection{Samoorganizujące się systemy krytyczne}
+		
+		W przypadku ciągłego dosypywania śniegu będą powstawać coraz to nowe lawiny. Na początku tylko lokalne, jednak z czasem będą zajmować coraz to większy obszar automaty. Warto w tym momencie 
+		wprowadzić kolejną wielkość, jaką jest średni spadek automaty: 
+
+			\[ <S> = \frac{ \sum_{i, j}^{} S_{i j} }{n^2} \] 
+
+		W sytuacji krytycznej jedno sypnięcie (mowa tu o mechaniźmie sypania śniegu) spowoduje globalną lawinę. Okazuje się jednak, że gdyby śnieg sypać dostatecznie długo, to $<S>$ nigdy nie przekroczy
+		pewnej granicznej wartości, co więcej $<S>$ nigdy też nie spadnie poniżej pewnej wartości, jest to pewnego rodzaju równowaga w jakiej utrzymuje się układ. Wartość graniczna jest niezależna od sposobu, 
+		w jaki sypiemy śnieg. Zależy zaś w pewnym stopniu od rozmiaru automaty, a także od tego, czy użyto otwartych, czy zamkniętych warunków brzegowych. Ponieważ zamknięte warunki brzegowe
+		wymuszają zerowanie się lokalnego spadu na granicy automaty (aby śnieg nie mógł się przemieścić poza automatę), średni spadek $<S>$ będzie w tym przypadku mniejszy.
+		
+	\subsection{Prawo potęgowe}
+		
+\section{Wyniki}
+
+	Automatę zaimplementowano w języku skryptowym ruby, 
+\section{Podsumowanie}
+
+	
+\end{document}
