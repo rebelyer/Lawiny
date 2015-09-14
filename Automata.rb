@@ -72,7 +72,6 @@ class Avalanche
 	def fall
 		@slope.each.with_index do |ar, i|
 			ar.each.with_index do |slope, j|
-				puts "i: #{i}\tj: #{j}" if slope > @threshold
 				if slope > @threshold then
 					if j.even? then
 						if i == 0 then
@@ -125,8 +124,8 @@ class Avalanche
 		@height.transpose.map{|ar| ar * ' '}*"\n" + "\n\n" + @slope.transpose.map{|ar| ar * ' '}*"\n" + "\n\n"
 	end
 
-  def start n
-    n.times do 
+  def start 
+    loop do 
       snowing!
       compute_slope
       loop do
@@ -134,19 +133,21 @@ class Avalanche
         fall
         break if @slope.all? {|ar| ar.all? {|slope| slope <= @threshold}}
       end
-      puts average_slope
+      to_file
+      break if average_slope > 6.5
     end
   end
 
   def average_slope
-    @slope.map{|ar| ar.reduce(:+)}.reduce(:+) 
+    @slope.map{|ar| ar.reduce(:+)}.reduce(:+) / 40.0**2 
   end
 
-
-
+	def to_file
+		File.open("average_slope.txt", "a") {|f| f.puts average_slope}
+	end
 end
 
 
 projekt = Avalanche.new(40, 7, false)
 
-projekt.start(5000)
+projekt.start
