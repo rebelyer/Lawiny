@@ -1,10 +1,11 @@
 class Avalanche
   
-  def initialize (size, threshold, conservative = true)
+  def initialize (size, threshold, conservative = true, open = true)
     @threshold = threshold
     @size = size
     @conservative = conservative
     @flag = false
+    @i = 0
 
     @height = Array.new @size
     @height.map! do |ar| 
@@ -28,6 +29,7 @@ class Avalanche
   end
 
   def snowing!
+  	@i += 1
     @point = 2.times.map{ rand(@size) }
     if @conservative then
       @height[@point[0]][@point[1]] += 1
@@ -44,6 +46,7 @@ class Avalanche
   end
 
   def compute_slope
+  
     (@size).times do |i|
       (@size).times do |j|
       	if j.even? then
@@ -134,20 +137,26 @@ class Avalanche
         break if @slope.all? {|ar| ar.all? {|slope| slope <= @threshold}}
       end
       to_file
-      break if average_slope > 6.5
+      break if @i >= 7500
     end
+    File.open("average_slope.txt", "a") {|f| f.puts }
   end
 
   def average_slope
-    @slope.map{|ar| ar.reduce(:+)}.reduce(:+) / 40.0**2 
+    @slope.map{|ar| ar.reduce(:+)}.reduce(:+) / (@size.to_f)**2 
   end
 
 	def to_file
-		File.open("average_slope.txt", "a") {|f| f.puts average_slope}
+		File.open("average_slope.txt", "a") do |f|
+			f.print "#{@i}\t"
+			f.puts average_slope
+		end
 	end
 end
 
 
-projekt = Avalanche.new(40, 7, false)
+#project_treshold_7 = [Avalanche.new(10, 7, false), Avalanche.new(20, 7, false), Avalanche.new(40,7,false)]
+#project_treshold_7.each {|avalanche| avalanche.start }
 
-projekt.start
+project_n_40 = [Avalanche.new(40, 4, false), Avalanche.new(40, 7, false), Avalanche.new(40, 10, false)]
+project_n_40.each {|avalanche| avalanche.start }
