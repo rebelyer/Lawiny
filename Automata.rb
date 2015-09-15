@@ -4,6 +4,7 @@ class Avalanche
     @threshold = threshold
     @size = size
     @conservative = conservative
+    @open = open
     @flag = false
     @i = 0
 
@@ -46,10 +47,10 @@ class Avalanche
   end
 
   def compute_slope
-  
-    (@size).times do |i|
-      (@size).times do |j|
-      	if j.even? then
+    
+       (@size).times do |i|
+         (@size).times do |j|
+            if j.even? then
 					if i == 0 then
 						@slope[0][j] = 2*@height[0][j] - @height[0][j+1] - @height[0][j+2] unless j == @size - 2
 						@slope[0][j] = 2*@height[i][j] - @height[i][j+1] if j == @size - 2
@@ -57,7 +58,7 @@ class Avalanche
 						@slope[i][j] = @height[i][j]+ @height[i-1][j+1]- @height[i][j+1]- @height[i][j+2] unless j == @size - 2
 						@slope[i][j] = @height[i][j] + @height[i-1][j+1] - @height[i][j+1] if j == @size -2
 					end
-		    else
+            else
 					if i == @size - 1 then
 						@slope[i][j] = @height[i][j] + @height[i][j+1] - @height[i][j+2] unless j == @size - 1
 						@slope[i][j] = @height[i][j] if j == @size - 1
@@ -65,10 +66,10 @@ class Avalanche
 						@slope[i][j] = @height[i][j]+ @height[i][j+1] - @height[i+1][j+1]- @height[i][j+2] unless j == @size - 1
 						@slope[i][j] = @height[i][j] if j == @size - 1
 					end
-				end
+            end
 			end
 		end
-	end
+  end
 
 
 
@@ -88,7 +89,7 @@ class Avalanche
 							end
 						else
 							if j == @size - 2 then
-								@height[i][j] -= 1
+								@height[i][j] -= 1 if @open
 								@height[i-1][j+1] -= 1
 								@height[i][j+1] += 1
 							else
@@ -101,15 +102,15 @@ class Avalanche
 					else
 						if i == @size - 1 then
 							if j == @size - 1 then
-								@height[i][j] -= 1
+								@height[i][j] -= 1 if @open
 							else
-								@height[i][j] -= 1
+								@height[i][j] -= 1 if @open
 								@height[i][j+1] -= 1
 								@height[i][j+2] += 1
 							end
 						else
 							if j == @size - 1 then
-								@height[i][j] -= 1
+								@height[i][j] -= 1 if @open
 							else
 								@height[i][j] -= 1
 								@height[i][j+1] -= 1
@@ -158,5 +159,8 @@ end
 #project_treshold_7 = [Avalanche.new(10, 7, false), Avalanche.new(20, 7, false), Avalanche.new(40,7,false)]
 #project_treshold_7.each {|avalanche| avalanche.start }
 
-project_n_40 = [Avalanche.new(40, 4, false), Avalanche.new(40, 7, false), Avalanche.new(40, 10, false)]
-project_n_40.each {|avalanche| avalanche.start }
+#project_n_40 = [Avalanche.new(40, 5, false), Avalanche.new(40, 7, false), Avalanche.new(40, 11, false)]
+#project_n_40.each {|avalanche| avalanche.start }
+
+project_conservative = [Avalanche.new(40,7,false, true), Avalanche.new(40,7,false, false)]
+project_conservative.each {|avalanche| avalanche.start}

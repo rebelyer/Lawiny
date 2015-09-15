@@ -5,6 +5,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{hyperref}
 
 \author{Rafał Wiensko \\Wojciech Zygmuntowicz}
 \title{Sprawozdanie na temat lawin}
@@ -29,11 +30,11 @@
 			\[ S_{i j} = h_1 + h_2 - h_3 - h_4 \]
 			
 			
-			\begin{figure}[h]
-				\begin{center}
-					\includegraphics [bb = 0 0 340 318, scale=0.5] {Slope_ij.png}
-				\end{center}
-			\end{figure}
+		%	\begin{figure}[h]
+		%		\begin{center}
+		%			\includegraphics [bb = 0 0 340 318, scale=0.5] {Slope_ij.png}
+		%		\end{center}
+		%	\end{figure}
 		
 		Dla każdej automaty definiujemy lokalny spadek progowy, powyżej którego pozwalamy, aby przemieścił się śnieg. Jeżeli zostanie on przekroczony następuje lokalne zsunięcie się śniegu, czyli:
 		
@@ -58,7 +59,7 @@
 			\[ <S> = \frac{ \sum_{i, j}^{} S_{i j} }{n^2} \] 
 
 		W sytuacji krytycznej jedno sypnięcie (mowa tu o mechaniźmie sypania śniegu) spowoduje globalną lawinę. Okazuje się jednak, że gdyby śnieg sypać dostatecznie długo, to $<S>$ nigdy nie przekroczy
-		pewnej granicznej wartości, co więcej $<S>$ nigdy też nie spadnie poniżej pewnej wartości, jest to pewnego rodzaju równowaga w jakiej utrzymuje się układ. Wartość graniczna jest niezależna od sposobu, 
+		pewnej granicznej wartości, co więcej $<S>$ nigdy też nie spadnie poniżej pewnej wartości, będzie do niej dążył. Jest to pewnego rodzaju równowaga w jakiej utrzymuje się układ. Stan ten nazywany jest atraktorem. Wartość graniczna jest niezależna od sposobu, 
 		w jaki sypiemy śnieg. Zależy zaś w pewnym stopniu od rozmiaru automaty, a także od tego, czy użyto otwartych, czy zamkniętych warunków brzegowych. Ponieważ zamknięte warunki brzegowe
 		wymuszają zerowanie się lokalnego spadu na granicy automaty (aby śnieg nie mógł się przemieścić poza automatę), średni spadek $<S>$ będzie w tym przypadku mniejszy.
 		
@@ -66,8 +67,25 @@
 		
 \section{Wyniki}
 
-	Automatę zaimplementowano w języku skryptowym ruby, 
+	Automatę zaimplementowano w języku skryptowym ruby, wyniki zaś zostały narysowane w formie wykresów w programie gnuplot. Na początku porównano zależności średniego nachylenia w zależności od liczby sypań śniegu $<S>(t)$ dla różnych rozmiarów automaty, symulację odbyto przy spadku progowym równym 7, niezachowawczym sypaniu śniegu oraz przy otwartych warunkach brzegowych, odpowiednio dla: n = 10, n = 20 i n = 40. Wykres zamieszono poniżej: 
+		\begin{figure}[h]
+			\begin{center}
+				\includegraphics [bb = 0 0 340 318, scale=0.5] {average_slope_threshold_7.png}
+			\end{center}
+		\end{figure}
+\newpage
+	Jak widać średnie nachylenie $<S>$ niezależnie od rozmiaru automaty zmierza do jednej wartości, którą jest $S_{gr} = 5.4$. Okazuje się także, że wartość ta nie zmienia się też dla lawin o większej liczbie swobody, niż 1. Choć wydawać się może, że analizowanie czegoś takiego, jak lawiny w liczbie wymiarów większej niż 3 jest bezcelowe, to należy pamiętać, że wyniki symulacji są dużo bardziej ogólne niż tylko dla lawin i obejmują także rozchodzenie się np. chorób w społeczeństwie, gdzie liczba stopni swobody może być większa niż 2. 
+
+	Kolejna symulacja została przeprowadzona w celu 
+
+	
+
 \section{Podsumowanie}
 
+	Samoorganizujące się systemy krytyczne są to układy, w których atraktorem jest punkt krytyczny. Za pomocą implementacji automaty komórkowej pokazano,  że przy odpowiednich zasadach lawiny śnieżne są właśnie samoorganizującymi się systemami krytycznymi i będą dążyć do stanu krytycznego. Zaskakujące jest, że podobne własności przejawiają także pożary lasów, epidemie oraz trzęsienia ziemi. Jest to kolejny przypadek w fizyce, kiedy rozwiązując specyficzny problem otrzymano odpowiedź na zachowanie się całej klasy układów.
+
+\section{Bibliografia}
+
+	\href {http://www.hiskp.uni-bonn.de/uploads/media/sandpiles.pdf}{Daniel Shmeier, Oliver Freyermuth - Sandpiles - Self Organized Critical Systems}
 	
 \end{document}
